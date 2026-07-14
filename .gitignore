@@ -1,0 +1,5 @@
+# macOS
+.DS_Store
+
+# Never commit exported shortcuts — they can carry SSH keys / Apple ID validation
+*.shortcut
