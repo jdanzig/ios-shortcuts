@@ -3,3 +3,8 @@
 
 # Never commit exported shortcuts — they can carry SSH keys / Apple ID validation
 *.shortcut
+
+# Raw phone screen recordings (huge). The compressed docs/demo.mp4 IS committed.
+# Match by name, not extension: a blanket *.MP4 also matches docs/demo.mp4 on
+# case-insensitive filesystems, which silently drops the demo from the repo.
+ScreenRecording*

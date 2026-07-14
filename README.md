@@ -11,6 +11,16 @@ Two iOS Shortcuts that SSH into that host (over Tailscale) and manage headless C
 
 Tap a Home Screen icon, pick from a list, done. The host does the work; the phone is just the remote.
 
+## Demo
+
+<!-- TO EMBED THE PLAYER: open this README on github.com, click edit (pencil), and drag
+     docs/demo.mp4 into the editor right here. GitHub uploads it and inserts an inline
+     video player. Then delete this comment and the link line below. -->
+
+[Watch the demo](docs/demo.mp4) (35s)
+
+Open a project, steer the session from your phone, end it when you're done. That's the whole loop.
+
 ## Install
 
 Tap to add to your iPhone:
