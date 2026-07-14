@@ -15,8 +15,6 @@ Tap a Home Screen icon, pick from a list, done. The host does the work; the phon
 
 https://github.com/user-attachments/assets/5f564983-3d0f-4ab2-a3bb-1d4586d294ee
 
-[Watch the demo](docs/demo.mp4) (35s)
-
 Open a project, steer the session from your phone, end it when you're done. That's the whole loop.
 
 ## Install
