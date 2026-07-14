@@ -13,9 +13,7 @@ Tap a Home Screen icon, pick from a list, done. The host does the work; the phon
 
 ## Demo
 
-<!-- TO EMBED THE PLAYER: open this README on github.com, click edit (pencil), and drag
-     docs/demo.mp4 into the editor right here. GitHub uploads it and inserts an inline
-     video player. Then delete this comment and the link line below. -->
+https://github.com/user-attachments/assets/5f564983-3d0f-4ab2-a3bb-1d4586d294ee
 
 [Watch the demo](docs/demo.mp4) (35s)
 
