@@ -51,6 +51,7 @@ Every session runs detached in tmux, so it survives the SSH call disconnecting. 
 ## Prerequisites
 
 - An always-on host you can SSH into (Mac, Linux, Raspberry Pi, VPS...), with `tmux` and the `claude` CLI installed.
+- **A single parent directory holding the projects you want to reach**, one subfolder per project. The shortcuts use `~/code`, and the picker just lists that directory's subfolders, so a project has to live there to show up on your phone. If yours are scattered around the filesystem, either move them under one parent or symlink them in (a symlink to a project directory works fine).
 - An **SSH server** running on it. macOS: enable Remote Login (System Settings > General > Sharing). Most Linux boxes already run `sshd`.
 - **Tailscale** on both the host and the phone, so the phone can reach the host from anywhere.
 - iOS **Shortcuts** app.
