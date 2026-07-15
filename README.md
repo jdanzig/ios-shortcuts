@@ -1,5 +1,7 @@
 # Claude Code from iOS
 
+*Thumb-driven development.*
+
 Drive Claude Code on an always-on machine from your phone. No terminal, no laptop, no SSH client to fumble with.
 
 The machine can be anything you can SSH into: a Mac, a Linux box, a Raspberry Pi, a VPS. If it runs `tmux`, the `claude` CLI, and `sshd`, these work.
