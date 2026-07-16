@@ -108,13 +108,26 @@ Pick a project in `~/code` and open it, or make a new one.
    - **Otherwise**
    - **Set Variable** `name` to `Chosen Item`
    - **End If**
-5. **Run Script over SSH** (create-or-open, idempotent):
+5. **Run Script over SSH** (resume-or-create, idempotent):
    ```bash
-   export PATH=/opt/homebrew/bin:$PATH; mk(){ mkdir -p ~/code/"$1"; tmux has-session -t "=$1" 2>/dev/null || tmux new -d -s "$1" -c ~/code/"$1" "claude --remote-control $1"; }; mk "NAME"
+   export PATH=/opt/homebrew/bin:$PATH; mk(){ d=~/code/"$1"; mkdir -p "$d"; tmux has-session -t "=$1" 2>/dev/null || { tmux new -d -s "$1" -c "$d" "claude --continue || claude"; sleep 8; tmux send-keys -t "$1" "/remote-control $1" Enter; }; }; mk "NAME"
    ```
    Replace `NAME` with the `name` variable, kept inside the quotes.
 
 Then open **claude.ai/code** on your phone and the session is waiting.
+
+What that one line does, by case:
+
+| You pick | What happens |
+| --- | --- |
+| Project whose session is still running | Walks into the live session, nothing respawns |
+| Project whose session was killed | **Resumes the conversation** where you left off |
+| `+ New folder` | Creates the folder, starts a fresh session |
+
+Two parts of it are load-bearing:
+
+- **`claude --continue \|\| claude`** — `--continue` resumes the most recent conversation in that folder, but it *exits immediately* if the folder has no history, which is every new project. The `|| claude` catches that and starts a fresh one.
+- **`send-keys "/remote-control"`** — you can't get resume and Remote Control from flags alone. `claude --continue --remote-control` runs, but silently ignores the resume and gives you a brand new conversation. The slash command is the only way to arm a session that's *already* resumed, so the script starts Claude first and arms it second. The `sleep 8` waits for Claude to finish booting before typing into it.
 
 > **Clip variant:** the same shortcut pointed at `~/clips` instead of `~/code` gives you a "clips" workspace. Swap `~/code` for `~/clips` in steps 1 and 5, and `New folder` for `New clip` in steps 1 and 4.
 
@@ -140,12 +153,14 @@ Note: this lists *every* tmux session except `main`. In this setup those are all
    ```
    Replace `PICKS` with the selected-items variable, kept inside the quotes.
 
-Killing a session ends its Claude process. The folder stays; only the session goes.
+Killing a session ends its Claude process and frees the memory it was holding. The folder stays, and so does the conversation: transcripts live in `~/.claude/projects/`, and reopening that project with the other shortcut resumes right where you left off. So ending a session is "I'm done for now," not "throw this away."
 
 ---
 
 ## Gotchas (things that cost me hours)
 
+- **`--continue` and `--remote-control` don't combine.** `claude --continue --remote-control name` looks like it works: it starts, and Remote Control is active. But it quietly ignores the resume and hands you a brand new conversation. I only caught it by watching which transcript file got written (a new one appeared instead of the existing one growing). Terminal scrollback is no help here, since Claude loads context without replaying it on screen. Start Claude with `--continue`, then arm it with the `/remote-control` slash command.
+- **`--continue` exits instantly when a folder has no history.** No error you'd notice, the process just ends and the tmux session dies with it. That's every brand-new project, so it needs the `|| claude` fallback.
 - **Set PATH on every SSH script.** An SSH command runs a non-login shell with a bare PATH, so `tmux` and `claude` often aren't found without it. Silent failure otherwise. The path is OS-dependent (`/opt/homebrew/bin` on macOS+Homebrew); see Prerequisites.
 - **Two variables named the same thing.** In the Code shortcut, "Choose from List" and "Split Text" both surface a variable that Shortcuts labels with your prompt name. The one under **Split** (yellow icon) is the whole *list*. The one under **Choose from** (cyan icon) is your actual *pick*. The If and the Otherwise must use the **cyan** one. Use the wrong one and the condition is always true (the list always contains the sentinel), and picking an existing project quietly creates a `+ New folder` junk dir. Verify any variable with **Reveal Action**: it should highlight Choose from, not Split.
 - **`contains`, not `is`.** Exact-match on the sentinel was flaky. `contains New folder` dodges whitespace and stray characters.
